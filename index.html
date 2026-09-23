@@ -1,251 +1,457 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>אלטימטר ירושלים</title>
-    <link rel="icon" type="image/png" href="צילום מסך 2026-09-22 234740.png">
+    <title>מד גובה</title>
+    
+    <!-- Favicon Generated from Image -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23e63946' stroke='%23000' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='42' fill='%23000'/%3E%3Cpath d='M14 50 A36 36 0 0 1 86 50 Z' fill='%232bb8d8'/%3E%3Cpath d='M14 50 A36 36 0 0 0 86 50 Z' fill='%23289b88'/%3E%3Cline x1='14' y1='50' x2='86' y2='50' stroke='%23000' stroke-width='4'/%3E%3Cline x1='41' y1='25' x2='59' y2='25' stroke='%23000' stroke-width='4' stroke-linecap='round'/%3E%3Cline x1='45' y1='32' x2='55' y2='32' stroke='%23000' stroke-width='4' stroke-linecap='round'/%3E%3Cline x1='41' y1='39' x2='59' y2='39' stroke='%23000' stroke-width='4' stroke-linecap='round'/%3E%3Cline x1='41' y1='63' x2='59' y2='63' stroke='%23000' stroke-width='4' stroke-linecap='round'/%3E%3Cline x1='45' y1='70' x2='55' y2='70' stroke='%23000' stroke-width='4' stroke-linecap='round'/%3E%3Cline x1='41' y1='77' x2='59' y2='77' stroke='%23000' stroke-width='4' stroke-linecap='round'/%3E%3Cline x1='46' y1='83' x2='54' y2='83' stroke='%23000' stroke-width='3' stroke-linecap='round'/%3E%3Cpolygon points='14,43 22,50 14,57' fill='%23e2e8f0' stroke='%23000' stroke-width='3' stroke-linejoin='round'/%3E%3Cpolygon points='86,43 78,50 86,57' fill='%23e2e8f0' stroke='%23000' stroke-width='3' stroke-linejoin='round'/%3E%3Cpolygon points='36,56 50,43 64,56' fill='%23ffffff' stroke='%23000' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Heebo', 'Rubik', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        },
+                        topo: {
+                            dark: '#0f172a',
+                            card: '#1e293b',
+                            accent: '#38bdf8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&family=Rubik:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Leaflet Map CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
         body {
-            font-family: 'Rubik', sans-serif;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            overflow: hidden;
+            font-family: 'Heebo', sans-serif;
+            background-color: #0b1120;
+            color: #f8fafc;
         }
 
-        .altimeter-circle {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
-            animation: pulse 4s infinite ease-in-out;
+        /* Glassmorphism effects */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1); }
-            50% { transform: scale(1.02); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.2); }
-            100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1); }
+        .glass-card-active {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
         }
 
-        .ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px dashed rgba(255, 255, 255, 0.3);
-        }
-        
-        .ring-1 { width: 270px; height: 270px; animation: spin 20s linear infinite; }
-        .ring-2 { width: 240px; height: 240px; border-style: dotted; animation: spin 30s linear infinite reverse; }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* Compass & Altimeter Gauge animations */
+        .pulse-ring {
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            animation: pulse-animation 2s infinite;
         }
 
-        .altitude-value {
-            font-size: 5rem;
-            font-weight: 700;
-            line-height: 1;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        @keyframes pulse-animation {
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Leaflet custom dark theme layer adjustments */
+        .leaflet-container {
+            background-color: #0f172a !important;
+            border-radius: 1rem;
             z-index: 10;
         }
-        
-        .altitude-unit {
-            font-size: 1.5rem;
-            opacity: 0.8;
-            margin-top: -10px;
-            z-index: 10;
-        }
-
-        .location-info {
-            text-align: center;
-            margin-top: 2rem;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 1rem 2rem;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        .mountain-bg {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 30vh;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="%23ffffff" fill-opacity="0.1" d="M0,224L60,213.3C120,203,240,181,360,186.7C480,192,600,224,720,213.3C840,203,960,149,1080,138.7C1200,128,1320,160,1380,176L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>') no-repeat bottom center;
-            background-size: cover;
-            z-index: -1;
-        }
-        .mountain-bg-2 {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 40vh;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="%23ffffff" fill-opacity="0.05" d="M0,128L48,144C96,160,192,192,288,181.3C384,171,480,117,576,90.7C672,64,768,64,864,85.3C960,107,1056,149,1152,149.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom center;
-            background-size: cover;
-            z-index: -2;
-        }
-
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-black">
 
-    <div class="mountain-bg-2"></div>
-    <div class="mountain-bg"></div>
-
-    <div class="mb-8 text-center z-10">
-        <h1 class="text-3xl md:text-4xl font-bold mb-2">מד גובה דיגיטלי</h1>
-        <p class="text-blue-200 text-lg">מבוסס על מיקום נוכחי</p>
-    </div>
-
-    <div class="altimeter-circle mb-8">
-        <div class="ring ring-1"></div>
-        <div class="ring ring-2"></div>
-        
-        <div class="flex items-center space-x-2 space-x-reverse z-10 text-blue-200 mb-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7" />
-            </svg>
-            <span class="font-medium tracking-wide">גובה</span>
-        </div>
-
-        <div class="altitude-value" id="altitudeDisplay">---</div>
-        <div class="altitude-unit">מטרים מעל פני הים</div>
-    </div>
-
-    <div class="location-info w-11/12 max-w-md z-10 shadow-lg">
-        <div class="flex items-center justify-center space-x-2 space-x-reverse mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-            </svg>
-            <h2 class="text-xl font-bold" id="locationName">ירושלים, ישראל</h2>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-4 text-sm mt-4 border-t border-white/20 pt-4">
-            <div>
-                <p class="text-blue-200 mb-1">גובה ממוצע בעיר</p>
-                <p class="font-semibold text-lg">~754 מטרים</p>
+    <header class="sticky top-0 z-50 glass-card border-b border-slate-800 px-4 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Logo & Title -->
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-sky-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <i data-lucide="mountain-snow" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        מד גובה טופוגרפי
+                        <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-normal">GPS + API</span>
+                    </h1>
+                </div>
             </div>
-            <div>
-                <p class="text-blue-200 mb-1">דיוק משוער</p>
-                <p class="font-semibold text-lg" id="accuracyDisplay">מבוסס נתונים</p>
+
+            <!-- Header Actions -->
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <!-- Status Badge -->
+                <div id="gps-status-badge" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/80 text-xs text-slate-300 border border-slate-700/60">
+                    <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                    <span id="status-text">ממתין למיקום...</span>
+                </div>
             </div>
         </div>
-        
-        <button id="updateBtn" class="mt-6 bg-white/20 hover:bg-white/30 transition-colors px-6 py-2 rounded-full font-medium flex items-center justify-center mx-auto space-x-2 space-x-reverse">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            <span>נסה למצוא גובה מדויק מ-GPS</span>
-        </button>
-        <p id="statusMsg" class="text-xs text-center mt-2 text-blue-200 h-4"></p>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-grow space-y-6">
+
+        <!-- Quick Top Search & Refresh Bar -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Search Bar -->
+            <div class="md:col-span-2 relative">
+                <div class="relative flex items-center">
+                    <input type="text" id="location-search-input" placeholder="חפש עיר, הר או נקודה בעולם (למשל: ירושלים, הר מירון, אילת)..." 
+                        class="w-full bg-slate-900/90 text-slate-100 placeholder-slate-500 text-sm rounded-xl pr-10 pl-24 py-3 border border-slate-700/80 focus:outline-none focus:border-brand-500 transition shadow-inner">
+                    <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute right-3 pointer-events-none"></i>
+                    <button id="search-btn" class="absolute left-2 bg-brand-600 hover:bg-brand-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow-md">
+                        חפש
+                    </button>
+                </div>
+                <!-- Search Suggestions Dropdown -->
+                <div id="search-results-dropdown" class="hidden absolute right-0 left-0 top-full mt-1 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden divide-y divide-slate-700/50"></div>
+            </div>
+
+            <!-- Get Current Location Button -->
+            <div class="flex gap-2">
+                <button id="get-location-btn" class="flex-1 bg-gradient-to-r from-brand-600 to-emerald-600 hover:from-brand-500 hover:to-emerald-500 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-600/20 transition active:scale-[0.98]">
+                    <i data-lucide="crosshair" class="w-5 h-5 pulse-ring rounded-full"></i>
+                    <span>אותר אותי עכשיו (GPS)</span>
+                </button>
+                
+                <button id="copy-coords-btn" title="העתק מיקום וגובה" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-3 rounded-xl border border-slate-700 transition flex items-center justify-center">
+                    <i data-lucide="share-2" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- HERO SECTION: Big Altimeter Display & Key Stats -->
+        <div class="grid grid-cols-1 gap-6">
+
+            <!-- MAIN ALTIMETER CARD -->
+            <div class="w-full glass-card glass-card-active rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[320px]">
+                <!-- Background Topographic Pattern Overlay -->
+                <div class="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                
+                <!-- Card Header -->
+                <div class="flex items-center justify-between z-10">
+                    <div class="flex items-center gap-2">
+                        <span class="p-2 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                            <i data-lucide="navigation-2" class="w-5 h-5"></i>
+                        </span>
+                        <div>
+                            <span class="text-xs text-slate-400 block font-medium">מיקום נוכחי</span>
+                            <h2 id="location-name-display" class="text-lg font-bold text-white">ישראל (ממתין לזיהוי)</h2>
+                        </div>
+                    </div>
+
+                    <!-- Mode Indicator -->
+                    <div id="source-tag" class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                        <i data-lucide="satellite" class="w-3.5 h-3.5 text-sky-400"></i>
+                        <span id="source-text">מקור: GPS / מפה</span>
+                    </div>
+                </div>
+
+                <!-- MAIN ELEVATION DISPLAY -->
+                <div class="my-6 text-center z-10 flex flex-col items-center justify-center">
+                    <div class="inline-flex items-baseline gap-2">
+                        <span id="elevation-value" class="text-6xl sm:text-7xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-300 drop-shadow-sm">
+                            ---
+                        </span>
+                        <span class="text-2xl sm:text-3xl font-bold text-brand-400">
+                            מטרים
+                        </span>
+                    </div>
+                    <p class="text-slate-400 text-sm mt-1 font-medium flex items-center gap-1">
+                        <span>גובה פני השטח (AMSL - מעל פני הים)</span>
+                        <i data-lucide="info" class="w-4 h-4 text-slate-500" title="פני הים הממוצעים"></i>
+                    </p>
+
+                    <!-- Real-time Accuracy Indicator -->
+                    <div class="mt-4 inline-flex items-center gap-3 bg-slate-900/80 px-4 py-1.5 rounded-full border border-slate-800 text-xs text-slate-300">
+                        <span class="flex items-center gap-1">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                            דיוק GPS: <strong id="accuracy-value" class="text-white">-- מטרים</strong>
+                        </span>
+                        <span class="text-slate-600">|</span>
+                        <span class="flex items-center gap-1">
+                            <i data-lucide="compass" class="w-3.5 h-3.5 text-sky-400"></i>
+                            כיוון: <strong id="heading-value" class="text-white">--°</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FULL WIDTH INTERACTIVE MAP SECTION -->
+        <div class="glass-card rounded-2xl p-4 flex flex-col space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="map" class="w-5 h-5 text-brand-400"></i>
+                    <h3 class="text-base font-bold text-white">מפה טופוגרפית אינטראקטיבית</h3>
+                </div>
+                <p class="text-xs text-slate-400">לחץ על כל נקודה במפה כדי למדוד גובה</p>
+            </div>
+
+            <!-- Leaflet Container -->
+            <div id="map" class="w-full h-[450px] rounded-xl border border-slate-700/80 shadow-inner"></div>
+
+            <!-- Layer Switchers -->
+            <div class="flex items-center justify-between text-xs pt-1">
+                <span class="text-slate-400">סגנון מפה:</span>
+                <div class="flex gap-2">
+                    <button id="layer-topo-btn" class="px-2.5 py-1 rounded-lg bg-brand-600 text-white font-medium border border-brand-500">טופוגרפי</button>
+                    <button id="layer-street-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">רחובות</button>
+                    <button id="layer-sat-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">לוויין</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="glass-card border-t border-slate-800 mt-10 py-6 px-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>© 2026 מד גובה טופוגרפי. נתונים מבוססים על Open-Meteo & OpenStreetMap.</p>
+            <div class="flex items-center gap-4 text-slate-400">
+                <span class="flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i> GPS זמין</span>
+                <span class="flex items-center gap-1"><i data-lucide="globe" class="w-3.5 h-3.5 text-sky-400"></i> כיסוי עולמי</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 left-5 z-50 bg-slate-800 border border-slate-700 text-white text-xs px-4 py-3 rounded-xl shadow-2xl transition-all duration-300 translate-y-20 opacity-0 flex items-center gap-2 pointer-events-none">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400" id="toast-icon"></i>
+        <span id="toast-msg">הודעה</span>
     </div>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        const altitudeDisplay = document.getElementById('altitudeDisplay');
-        const updateBtn = document.getElementById('updateBtn');
-        const statusMsg = document.getElementById('statusMsg');
-        const accuracyDisplay = document.getElementById('accuracyDisplay');
+        // APP STATE
+        const state = {
+            currentLat: 31.7683, // Default to Jerusalem
+            currentLng: 35.2137,
+            currentElevationMeters: 754, // Default Jerusalem height
+            gpsAccuracy: null,
+            heading: null,
+            speed: null,
+            hardwareAlt: null,
+            locationName: 'ירושלים, ישראל',
+            source: 'ברירת מחדל'
+        };
 
-        // Initial default value for Jerusalem
-        const defaultJerusalemAltitude = 754;
-        
-        // Function to animate numbers
-        function animateValue(obj, start, end, duration) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                // Ease out quart
-                const easeOut = 1 - Math.pow(1 - progress, 4);
-                obj.innerHTML = Math.floor(easeOut * (end - start) + start);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
+        // Leaflet Map instance
+        let map = null;
+        let mapMarker = null;
+        let tileLayers = {};
+        let currentTileLayer = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initMap();
+            setupEventListeners();
+
+            // Initial fetch for default location (Jerusalem)
+            updateLocationAndElevation(state.currentLat, state.currentLng, 'ירושלים', 'ברירת מחדל');
+
+            // Try auto GPS on load
+            if ("geolocation" in navigator) {
+                requestGPSLocation(false);
+            }
+        });
+
+        function initMap() {
+            // Initialize Leaflet map
+            map = L.map('map', {
+                zoomControl: true,
+                attributionControl: false
+            }).setView([state.currentLat, state.currentLng], 12);
+
+            // Define tile layers
+            tileLayers.topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17
+            });
+
+            tileLayers.street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            });
+
+            tileLayers.sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 18
+            });
+
+            currentTileLayer = tileLayers.topo;
+            currentTileLayer.addTo(map);
+
+            // Custom Glowing Marker Icon
+            const customIcon = L.divIcon({
+                className: 'custom-map-marker',
+                html: `<div class="w-6 h-6 rounded-full bg-brand-500 border-2 border-white shadow-lg pulse-ring flex items-center justify-center">
+                        <div class="w-2 h-2 rounded-full bg-white"></div>
+                       </div>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+
+            mapMarker = L.marker([state.currentLat, state.currentLng], { icon: customIcon }).addTo(map);
+
+            // Click on map to fetch elevation at clicked position
+            map.on('click', async (e) => {
+                const { lat, lng } = e.latlng;
+                showToast('מחשב גובה בנקודה שנבחרה...');
+                await updateLocationAndElevation(lat, lng, `נקודה שנבחרה במפה`, 'מפה אינטראקטיבית');
+            });
         }
 
-        // Initialize with default Jerusalem altitude
-        setTimeout(() => {
-            animateValue(altitudeDisplay, 0, defaultJerusalemAltitude, 2000);
-        }, 500);
+        async function fetchElevation(lat, lng) {
+            try {
+                const response = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lng}`);
+                const data = await response.json();
+                if (data && data.elevation && data.elevation.length > 0) {
+                    return Math.round(data.elevation[0] * 10) / 10;
+                }
+                return 0;
+            } catch (err) {
+                console.error("Error fetching elevation API:", err);
+                return null;
+            }
+        }
 
-        // Try to get precise altitude from device GPS if user requests
-        updateBtn.addEventListener('click', () => {
+        async function fetchPlaceName(lat, lng) {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=12&accept-language=he`);
+                const data = await response.json();
+                if (data && data.address) {
+                    const city = data.address.city || data.address.town || data.address.village || data.address.suburb || data.address.county || 'מיקום לא ידוע';
+                    const stateOrCountry = data.address.country || '';
+                    return `${city}, ${stateOrCountry}`.trim();
+                }
+                return `${lat.toFixed(3)}, ${lng.toFixed(3)}`;
+            } catch (e) {
+                return `${lat.toFixed(3)}, ${lng.toFixed(3)}`;
+            }
+        }
+
+        async function updateLocationAndElevation(lat, lng, customName = null, source = 'GPS') {
+            state.currentLat = lat;
+            state.currentLng = lng;
+            state.source = source;
+
+            const sourceText = document.getElementById('source-text');
+            if (sourceText) sourceText.textContent = `מקור: ${source}`;
+
+            if (map && mapMarker) {
+                map.setView([lat, lng], map.getZoom());
+                mapMarker.setLatLng([lat, lng]);
+            }
+
+            const elevation = await fetchElevation(lat, lng);
+            if (elevation !== null) {
+                state.currentElevationMeters = elevation;
+            }
+
+            if (customName) {
+                state.locationName = customName;
+            } else {
+                state.locationName = await fetchPlaceName(lat, lng);
+            }
+
+            document.getElementById('location-name-display').textContent = state.locationName;
+            document.getElementById('elevation-value').textContent = state.currentElevationMeters;
+        }
+
+        function requestGPSLocation(notifyUser = true) {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+
             if (!("geolocation" in navigator)) {
-                statusMsg.textContent = "שירותי מיקום אינם נתמכים בדפדפן זה.";
+                if (notifyUser) showToast('דפדפן זה אינו תומך בגישה ל-GPS', true);
                 return;
             }
 
-            statusMsg.textContent = "מחפש אות GPS...";
-            updateBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            updateBtn.disabled = true;
+            statusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
+            statusText.textContent = 'מאתר לווייני GPS...';
 
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    updateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    updateBtn.disabled = false;
-                    
-                    const altitude = position.coords.altitude;
-                    const accuracy = position.coords.altitudeAccuracy;
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
+                    const speed = position.coords.speed;
+                    const heading = position.coords.heading;
+                    const hwAltitude = position.coords.altitude;
 
-                    if (altitude !== null) {
-                        const targetAltitude = Math.round(altitude);
-                        const currentVal = parseInt(altitudeDisplay.innerText) || 0;
-                        animateValue(altitudeDisplay, currentVal, targetAltitude, 1500);
-                        
-                        statusMsg.textContent = "הגובה עודכן בהצלחה מ-GPS.";
-                        statusMsg.classList.add('text-green-300');
-                        statusMsg.classList.remove('text-blue-200', 'text-red-300');
-                        
-                        if (accuracy) {
-                            accuracyDisplay.textContent = `±${Math.round(accuracy)} מטרים`;
-                        } else {
-                             accuracyDisplay.textContent = "GPS (ללא דיוק)";
-                        }
-                    } else {
-                        statusMsg.textContent = "אות GPS התקבל, אך לא סופק נתון גובה.";
-                        statusMsg.classList.add('text-red-300');
-                        statusMsg.classList.remove('text-blue-200', 'text-green-300');
-                    }
+                    state.gpsAccuracy = accuracy;
+                    state.heading = heading;
+                    state.speed = speed;
+                    state.hardwareAlt = hwAltitude;
+
+                    const accEl = document.getElementById('accuracy-value');
+                    if (accEl) accEl.textContent = `${Math.round(accuracy)} מטרים`;
+                    const headEl = document.getElementById('heading-value');
+                    if (headEl) headEl.textContent = heading ? `${Math.round(heading)}°` : '--°';
+
+                    statusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+                    statusText.textContent = 'GPS פעיל ומדויק';
+
+                    if (notifyUser) showToast('מיקום GPS עודכן בהצלחה!');
+
+                    await updateLocationAndElevation(lat, lng, null, 'לווייני GPS');
                 },
                 (error) => {
-                    updateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    updateBtn.disabled = false;
-                    statusMsg.classList.add('text-red-300');
-                    statusMsg.classList.remove('text-blue-200', 'text-green-300');
-                    
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            statusMsg.textContent = "הגישה למיקום נדחתה על ידי המשתמש.";
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            statusMsg.textContent = "מידע על המיקום אינו זמין כעת.";
-                            break;
-                        case error.TIMEOUT:
-                            statusMsg.textContent = "זמן הבקשה למיקום פג.";
-                            break;
-                        default:
-                            statusMsg.textContent = "אירעה שגיאה לא ידועה בעת הבאת המיקום.";
-                            break;
-                    }
+                    console.warn('GPS Error:', error.message);
+                    statusDot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
+                    statusText.textContent = 'GPS לא זמין';
+                    if (notifyUser) showToast('לא ניתן להשיג מיקום GPS. ודא שהרשאות מיקום מופעלות.', true);
                 },
                 {
                     enableHighAccuracy: true,
@@ -253,7 +459,138 @@
                     maximumAge: 0
                 }
             );
-        });
+        }
+
+        async function handleSearch() {
+            const input = document.getElementById('location-search-input');
+            const query = input.value.trim();
+            if (!query) return;
+
+            showToast(`מחפש את "${query}"...`);
+
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&accept-language=he&limit=5`);
+                const results = await res.json();
+
+                const dropdown = document.getElementById('search-results-dropdown');
+                dropdown.innerHTML = '';
+
+                if (results && results.length > 0) {
+                    dropdown.classList.remove('hidden');
+
+                    results.forEach(place => {
+                        const btn = document.createElement('button');
+                        btn.className = 'w-full text-right p-3 hover:bg-slate-700/80 flex items-center justify-between text-xs transition border-b border-slate-700/40 last:border-none';
+                        btn.innerHTML = `
+                            <div class="flex items-center gap-2 overflow-hidden">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-sky-400 shrink-0"></i>
+                                <span class="truncate text-slate-200 font-medium">${place.display_name}</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono shrink-0 mr-2">${parseFloat(place.lat).toFixed(2)}, ${parseFloat(place.lon).toFixed(2)}</span>
+                        `;
+
+                        btn.addEventListener('click', async () => {
+                            dropdown.classList.add('hidden');
+                            input.value = place.display_name.split(',')[0];
+                            const lat = parseFloat(place.lat);
+                            const lng = parseFloat(place.lon);
+                            await updateLocationAndElevation(lat, lng, place.display_name.split(',')[0], 'חיפוש מיקום');
+                            showToast(`המיקום שונה ל-${place.display_name.split(',')[0]}`);
+                        });
+
+                        dropdown.appendChild(btn);
+                    });
+                    lucide.createIcons();
+                } else {
+                    showToast('לא נמצאו תוצאות עבור הטרם המבוקש', true);
+                }
+            } catch (e) {
+                showToast('שגיאה בחיפוש המיקום', true);
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('get-location-btn').addEventListener('click', () => {
+                requestGPSLocation(true);
+            });
+
+            document.getElementById('search-btn').addEventListener('click', handleSearch);
+            document.getElementById('location-search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSearch();
+            });
+
+            document.addEventListener('click', (e) => {
+                const dropdown = document.getElementById('search-results-dropdown');
+                if (!e.target.closest('#location-search-input') && !e.target.closest('#search-results-dropdown')) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+
+            // Layer Switchers
+            document.getElementById('layer-topo-btn').addEventListener('click', function() {
+                switchMapLayer('topo', this);
+            });
+            document.getElementById('layer-street-btn').addEventListener('click', function() {
+                switchMapLayer('street', this);
+            });
+            document.getElementById('layer-sat-btn').addEventListener('click', function() {
+                switchMapLayer('sat', this);
+            });
+
+            // Copy Coords / Share Button
+            document.getElementById('copy-coords-btn').addEventListener('click', () => {
+                const text = `מיקום: ${state.locationName}\nגובה: ${state.currentElevationMeters} מטרים מעל פני הים\nקואורדינטות: ${state.currentLat.toFixed(5)}, ${state.currentLng.toFixed(5)}`;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text);
+                } else {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                }
+                showToast('פרטי המיקום והגובה הועתקו ללוח!');
+            });
+        }
+
+        function switchMapLayer(layerKey, activeBtn) {
+            if (currentTileLayer) {
+                map.removeLayer(currentTileLayer);
+            }
+            currentTileLayer = tileLayers[layerKey];
+            currentTileLayer.addTo(map);
+
+            ['layer-topo-btn', 'layer-street-btn', 'layer-sat-btn'].forEach(id => {
+                const btn = document.getElementById(id);
+                btn.className = 'px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700';
+            });
+
+            activeBtn.className = 'px-2.5 py-1 rounded-lg bg-brand-600 text-white font-medium border border-brand-500';
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.textContent = message;
+            
+            if (isError) {
+                toast.className = toast.className.replace('border-slate-700', 'border-rose-500/50 bg-rose-950');
+                toastIcon.className = 'w-4 h-4 text-rose-400';
+            } else {
+                toast.className = toast.className.replace('border-rose-500/50 bg-rose-950', 'border-slate-700 bg-slate-800');
+                toastIcon.className = 'w-4 h-4 text-emerald-400';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
     </script>
 </body>
 </html>
