@@ -248,8 +248,8 @@
             <div class="flex items-center justify-between text-xs pt-1">
                 <span class="text-slate-400">סגנון מפה:</span>
                 <div class="flex gap-2">
-                    <button id="layer-topo-btn" class="px-2.5 py-1 rounded-lg bg-brand-600 text-white font-medium border border-brand-500">טופוגרפי</button>
-                    <button id="layer-street-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">רחובות</button>
+                    <button id="layer-topo-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">טופוגרפי</button>
+                    <button id="layer-street-btn" class="px-2.5 py-1 rounded-lg bg-brand-600 text-white font-medium border border-brand-500">רחובות</button>
                     <button id="layer-sat-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">לוויין</button>
                 </div>
             </div>
@@ -329,7 +329,7 @@
                 maxZoom: 18
             });
 
-            currentTileLayer = tileLayers.topo;
+            currentTileLayer = tileLayers.street;
             currentTileLayer.addTo(map);
 
             // Custom Glowing Marker Icon
