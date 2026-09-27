@@ -111,18 +111,6 @@
             border-radius: 1rem;
             z-index: 10;
         }
-
-        /* Custom Vertical Map Scrollbar */
-        .map-vertical-scrollbar {
-            writing-mode: vertical-lr;
-            direction: rtl;
-            -webkit-appearance: slider-vertical;
-            appearance: slider-vertical;
-            width: 14px;
-            accent-color: #16a34a;
-            background: #1e293b;
-            border-radius: 8px;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-black">
@@ -253,28 +241,8 @@
                 <p class="text-xs text-slate-400">לחץ על כל נקודה במפה כדי למדוד גובה</p>
             </div>
 
-            <!-- Map and External Right-side Scrollbar Wrapper -->
-            <div class="flex items-center gap-3 w-full">
-                <!-- Custom Right Scrollbar Area (Outside Map) -->
-                <div class="flex flex-col items-center justify-between h-[450px] bg-slate-900/90 border border-slate-700/80 rounded-xl p-2 select-none shadow-inner w-12 shrink-0">
-                    <button id="map-scroll-zoom-in" title="תקריב (+)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-brand-400 hover:text-white flex items-center justify-center transition border border-slate-700 active:scale-95 shadow-sm">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                    </button>
-
-                    <div class="flex-1 my-2 flex items-center justify-center w-full relative">
-                        <input type="range" id="map-zoom-scrollbar" min="2" max="19" step="1" value="12" 
-                            class="map-vertical-scrollbar h-full cursor-pointer" 
-                            title="סרגל גלילת גובה / זום המפה">
-                    </div>
-
-                    <button id="map-scroll-zoom-out" title="הרחק (-)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-brand-400 hover:text-white flex items-center justify-center transition border border-slate-700 active:scale-95 shadow-sm">
-                        <i data-lucide="minus" class="w-4 h-4"></i>
-                    </button>
-                </div>
-
-                <!-- Leaflet Container -->
-                <div id="map" class="flex-1 h-[450px] rounded-xl border border-slate-700/80 shadow-inner"></div>
-            </div>
+            <!-- Leaflet Container -->
+            <div id="map" class="w-full h-[450px] rounded-xl border border-slate-700/80 shadow-inner"></div>
 
             <!-- Layer Switchers -->
             <div class="flex items-center justify-between text-xs pt-1">
@@ -305,6 +273,12 @@
         <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400" id="toast-icon"></i>
         <span id="toast-msg">הודעה</span>
     </div>
+
+    <!-- FLOATING SCROLL TO TOP BUTTON -->
+    <button id="scroll-to-top-btn" title="חזרה לראש הדף" class="fixed bottom-6 right-6 z-50 bg-brand-600 hover:bg-brand-500 text-white p-3.5 rounded-full shadow-2xl transition-all duration-300 opacity-0 translate-y-10 pointer-events-none flex items-center gap-2 border border-brand-400/40 active:scale-95">
+        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+        <span class="text-xs font-bold hidden sm:inline">חזרה למעלה</span>
+    </button>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
@@ -375,37 +349,6 @@
             });
 
             mapMarker = L.marker([state.currentLat, state.currentLng], { icon: customIcon }).addTo(map);
-
-            // Connect External Right Scrollbar to Map Zoom
-            const zoomScrollbar = document.getElementById('map-zoom-scrollbar');
-            const zoomInBtn = document.getElementById('map-scroll-zoom-in');
-            const zoomOutBtn = document.getElementById('map-scroll-zoom-out');
-
-            if (zoomScrollbar) {
-                zoomScrollbar.addEventListener('input', (e) => {
-                    const zoomVal = parseInt(e.target.value, 10);
-                    if (map) map.setZoom(zoomVal);
-                });
-            }
-
-            if (zoomInBtn) {
-                zoomInBtn.addEventListener('click', () => {
-                    if (map) map.zoomIn();
-                });
-            }
-
-            if (zoomOutBtn) {
-                zoomOutBtn.addEventListener('click', () => {
-                    if (map) map.zoomOut();
-                });
-            }
-
-            // Sync scrollbar when map zoom changes (via wheel, gestures, or buttons)
-            map.on('zoomend', () => {
-                if (zoomScrollbar) {
-                    zoomScrollbar.value = map.getZoom();
-                }
-            });
 
             // Click on map to fetch elevation at clicked position
             map.on('click', async (e) => {
@@ -587,6 +530,20 @@
                 if (!e.target.closest('#location-search-input') && !e.target.closest('#search-results-dropdown')) {
                     dropdown.classList.add('hidden');
                 }
+            });
+
+            // Scroll to top floating button logic
+            const scrollBtn = document.getElementById('scroll-to-top-btn');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 150) {
+                    scrollBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+                } else {
+                    scrollBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                }
+            });
+
+            scrollBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
             // Layer Switchers
