@@ -148,7 +148,7 @@
             <!-- Search Bar -->
             <div class="md:col-span-2 relative">
                 <div class="relative flex items-center">
-                    <input type="text" id="location-search-input" placeholder="חפש עיר, הר או נקודה בעולם (למשל: ירושלים, הר מירון, אילת)..." 
+                    <input type="text" id="location-search-input" placeholder="חפש עיר, הר או נקודה בעולם" 
                         class="w-full bg-slate-900/90 text-slate-100 placeholder-slate-500 text-sm rounded-xl pr-10 pl-24 py-3 border border-slate-700/80 focus:outline-none focus:border-brand-500 transition shadow-inner">
                     <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute right-3 pointer-events-none"></i>
                     <button id="search-btn" class="absolute left-2 bg-brand-600 hover:bg-brand-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow-md">
@@ -161,13 +161,9 @@
 
             <!-- Get Current Location Button -->
             <div class="flex gap-2">
-                <button id="get-location-btn" class="flex-1 bg-gradient-to-r from-brand-600 to-emerald-600 hover:from-brand-500 hover:to-emerald-500 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-600/20 transition active:scale-[0.98]">
+                <button id="get-location-btn" class="w-full bg-gradient-to-r from-brand-600 to-emerald-600 hover:from-brand-500 hover:to-emerald-500 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-600/20 transition active:scale-[0.98]">
                     <i data-lucide="crosshair" class="w-5 h-5 pulse-ring rounded-full"></i>
-                    <span>אותר אותי עכשיו (GPS)</span>
-                </button>
-                
-                <button id="copy-coords-btn" title="העתק מיקום וגובה" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-3 rounded-xl border border-slate-700 transition flex items-center justify-center">
-                    <i data-lucide="share-2" class="w-5 h-5"></i>
+                    <span>אתר אותי עכשיו (GPS)</span>
                 </button>
             </div>
         </div>
@@ -546,23 +542,6 @@
             });
             document.getElementById('layer-sat-btn').addEventListener('click', function() {
                 switchMapLayer('sat', this);
-            });
-
-            // Copy Coords / Share Button
-            document.getElementById('copy-coords-btn').addEventListener('click', () => {
-                const text = `מיקום: ${state.locationName}\nגובה: ${state.currentElevationMeters} מטרים מעל פני הים\nקואורדינטות: ${state.currentLat.toFixed(5)}, ${state.currentLng.toFixed(5)}`;
-                
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(text);
-                } else {
-                    const textarea = document.createElement('textarea');
-                    textarea.value = text;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                }
-                showToast('פרטי המיקום והגובה הועתקו ללוח!');
             });
         }
 
