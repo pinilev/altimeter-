@@ -141,7 +141,7 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-grow space-y-6">
+    <main class="max-w-7xl mx-auto w-full px-4 pt-6 pb-20 flex-grow space-y-6">
 
         <!-- Quick Top Search & Refresh Bar -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -233,51 +233,39 @@
 
         <!-- FULL WIDTH INTERACTIVE MAP SECTION -->
         <div class="glass-card rounded-2xl p-4 flex flex-col space-y-3">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between flex-wrap gap-3">
                 <div class="flex items-center gap-2">
                     <i data-lucide="map" class="w-5 h-5 text-brand-400"></i>
-                    <h3 class="text-base font-bold text-white">מפה טופוגרפית אינטראקטיבית</h3>
+                    <div>
+                        <h3 class="text-base font-bold text-white">מפה אינטראקטיבית</h3>
+                        <p class="text-xs text-slate-400">לחץ על כל נקודה במפה כדי למדוד גובה</p>
+                    </div>
                 </div>
-                <p class="text-xs text-slate-400">לחץ על כל נקודה במפה כדי למדוד גובה</p>
+
+                <!-- Layer Switchers Moved to Header -->
+                <div class="flex items-center gap-2 text-xs">
+                    <button id="layer-topo-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition">טופוגרפי</button>
+                    <button id="layer-street-btn" class="px-2.5 py-1 rounded-lg bg-brand-600 text-white font-medium border border-brand-500 transition">רחובות</button>
+                    <button id="layer-sat-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition">לוויין</button>
+                </div>
             </div>
 
             <!-- Leaflet Container -->
             <div id="map" class="w-full h-[450px] rounded-xl border border-slate-700/80 shadow-inner"></div>
-
-            <!-- Layer Switchers -->
-            <div class="flex items-center justify-between text-xs pt-1">
-                <span class="text-slate-400">סגנון מפה:</span>
-                <div class="flex gap-2">
-                    <button id="layer-topo-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">טופוגרפי</button>
-                    <button id="layer-street-btn" class="px-2.5 py-1 rounded-lg bg-brand-600 text-white font-medium border border-brand-500">רחובות</button>
-                    <button id="layer-sat-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">לוויין</button>
-                </div>
-            </div>
         </div>
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="glass-card border-t border-slate-800 mt-10 py-6 px-4 text-center text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p>© 2026 מד גובה טופוגרפי. נתונים מבוססים על Open-Meteo & OpenStreetMap.</p>
-            <div class="flex items-center gap-4 text-slate-400">
-                <span class="flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i> GPS זמין</span>
-                <span class="flex items-center gap-1"><i data-lucide="globe" class="w-3.5 h-3.5 text-sky-400"></i> כיסוי עולמי</span>
-            </div>
-        </div>
-    </footer>
-
     <!-- NOTIFICATION TOAST -->
-    <div id="toast" class="fixed bottom-5 left-5 z-50 bg-slate-800 border border-slate-700 text-white text-xs px-4 py-3 rounded-xl shadow-2xl transition-all duration-300 translate-y-20 opacity-0 flex items-center gap-2 pointer-events-none">
+    <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-800/95 backdrop-blur-md border border-slate-700 text-white text-xs px-5 py-3 rounded-xl shadow-2xl transition-all duration-300 -translate-y-10 opacity-0 flex items-center gap-2 pointer-events-none">
         <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400" id="toast-icon"></i>
         <span id="toast-msg">הודעה</span>
     </div>
 
-    <!-- FLOATING SCROLL TO TOP BUTTON -->
-    <button id="scroll-to-top-btn" title="חזרה לראש הדף" class="fixed bottom-6 right-6 z-50 bg-brand-600 hover:bg-brand-500 text-white p-3.5 rounded-full shadow-2xl transition-all duration-300 opacity-0 translate-y-10 pointer-events-none flex items-center gap-2 border border-brand-400/40 active:scale-95">
-        <i data-lucide="arrow-up" class="w-5 h-5"></i>
-        <span class="text-xs font-bold hidden sm:inline">חזרה למעלה</span>
+    <!-- FLOATING SCROLL TO TOP BUTTON (FULL WIDTH AT BOTTOM) -->
+    <button id="scroll-to-top-btn" title="חזרה לראש הדף" class="fixed bottom-0 inset-x-0 w-full z-50 bg-gradient-to-r from-brand-600 via-emerald-600 to-sky-600 hover:from-brand-500 hover:to-sky-500 text-white py-3.5 px-4 shadow-2xl transition-all duration-300 opacity-0 translate-y-10 pointer-events-none flex items-center justify-center gap-2 border-t border-brand-400/40 active:scale-[0.99]">
+        <i data-lucide="arrow-up" class="w-4 h-4 animate-bounce"></i>
+        <span class="text-xs sm:text-sm font-bold whitespace-nowrap">חזרה למעלה לצפייה בגובה המדויק</span>
     </button>
 
     <!-- JAVASCRIPT LOGIC -->
@@ -322,17 +310,20 @@
                 attributionControl: false
             }).setView([state.currentLat, state.currentLng], 12);
 
-            // Define tile layers
-            tileLayers.topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-                maxZoom: 17
+            // Define tile layers using Google Maps
+            tileLayers.topo = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
             });
 
-            tileLayers.street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19
+            tileLayers.street = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
             });
 
-            tileLayers.sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 18
+            tileLayers.sat = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
             });
 
             currentTileLayer = tileLayers.street;
@@ -601,14 +592,14 @@
                 toast.className = toast.className.replace('border-slate-700', 'border-rose-500/50 bg-rose-950');
                 toastIcon.className = 'w-4 h-4 text-rose-400';
             } else {
-                toast.className = toast.className.replace('border-rose-500/50 bg-rose-950', 'border-slate-700 bg-slate-800');
+                toast.className = toast.className.replace('border-rose-500/50 bg-rose-950', 'border-slate-700 bg-slate-800/95');
                 toastIcon.className = 'w-4 h-4 text-emerald-400';
             }
 
-            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.remove('-translate-y-10', 'opacity-0');
             
             setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.add('-translate-y-10', 'opacity-0');
             }, 3000);
         }
     </script>
