@@ -183,7 +183,7 @@
                             <i data-lucide="navigation-2" class="w-5 h-5"></i>
                         </span>
                         <div>
-                            <span class="text-xs text-slate-400 block font-medium">מיקום נוכחי</span>
+                            <span class="text-xs text-slate-400 block font-medium">מיקום</span>
                             <h2 id="location-name-display" class="text-lg font-bold text-white">ישראל (ממתין לזיהוי)</h2>
                         </div>
                     </div>
@@ -216,11 +216,6 @@
                             <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
                             דיוק GPS: <strong id="accuracy-value" class="text-white">-- מטרים</strong>
                         </span>
-                        <span class="text-slate-600">|</span>
-                        <span class="flex items-center gap-1">
-                            <i data-lucide="compass" class="w-3.5 h-3.5 text-sky-400"></i>
-                            כיוון: <strong id="heading-value" class="text-white">--°</strong>
-                        </span>
                     </div>
                 </div>
             </div>
@@ -240,8 +235,8 @@
 
                 <!-- Layer Switchers Moved to Header -->
                 <div class="flex items-center gap-2 text-xs">
-                    <button id="layer-topo-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition">טופוגרפי</button>
-                    <button id="layer-street-btn" class="px-2.5 py-1 rounded-lg bg-brand-600 text-white font-medium border border-brand-500 transition">רחובות</button>
+                    <button id="layer-topo-btn" class="px-2.5 py-1 rounded-lg bg-brand-600 text-white font-medium border border-brand-500 transition">טופוגרפי</button>
+                    <button id="layer-street-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition">רחובות</button>
                     <button id="layer-sat-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition">לוויין</button>
                 </div>
             </div>
@@ -272,7 +267,6 @@
             currentLng: 35.2137,
             currentElevationMeters: 754, // Default Jerusalem height
             gpsAccuracy: null,
-            heading: null,
             speed: null,
             hardwareAlt: null,
             locationName: 'ירושלים, ישראל',
@@ -322,7 +316,7 @@
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
             });
 
-            currentTileLayer = tileLayers.street;
+            currentTileLayer = tileLayers.topo;
             currentTileLayer.addTo(map);
 
             // Custom Glowing Marker Icon
@@ -420,18 +414,14 @@
                     const lng = position.coords.longitude;
                     const accuracy = position.coords.accuracy;
                     const speed = position.coords.speed;
-                    const heading = position.coords.heading;
                     const hwAltitude = position.coords.altitude;
 
                     state.gpsAccuracy = accuracy;
-                    state.heading = heading;
                     state.speed = speed;
                     state.hardwareAlt = hwAltitude;
 
                     const accEl = document.getElementById('accuracy-value');
                     if (accEl) accEl.textContent = `${Math.round(accuracy)} מטרים`;
-                    const headEl = document.getElementById('heading-value');
-                    if (headEl) headEl.textContent = heading ? `${Math.round(heading)}°` : '--°';
 
                     statusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
                     statusText.textContent = 'GPS פעיל ומדויק';
